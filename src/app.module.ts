@@ -10,7 +10,7 @@ import { AppService } from './app.service';
       host: 'localhost', // Para usar en desarrollo para usar en prod y docker, cambiar a 'mysql'
       port: 3307, // Para usar en desarrollo para usar en prod y docker, cambiar a 3306
       // host: 'mysql', // Nombre del servicio en el docker-compose.yml (si se usa docker)
-      // port: 3306,  // Puerto expuesto en el docker-compose.yml (si se usa docker)
+      // port: 3306, // Puerto expuesto en el docker-compose.yml (si se usa docker)
       username: 'admin',
       password: 'admin123',
       database: 'control_asistencia_db',

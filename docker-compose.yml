@@ -14,11 +14,11 @@ services:
     ports:
       - "3307:3306"
 
-  # nest-app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - mysql
-  #   ports:
-  #     - '3000:3000'
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    ports:
+      - '3000:3000'
