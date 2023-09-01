@@ -9,9 +9,12 @@ import {
 import { Role } from '../../../common/enums/rol.enum';
 
 @Entity()
-export class User {
+export class UserTeachers {
   @PrimaryColumn('uuid', { length: 255, generated: 'uuid' })
   _id: string;
+
+  @Column({ unique: true, nullable: false })
+  rut: string;
 
   @Column()
   username: string;
@@ -20,7 +23,10 @@ export class User {
   name: string;
 
   @Column()
-  lastName: string;
+  lastNameM: string;
+
+  @Column()
+  lastNameF: string;
 
   @Column({ unique: true, nullable: false })
   email: string;
@@ -28,7 +34,7 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  @Column({ type: 'enum', default: Role.USER, enum: Role })
+  @Column({ type: 'enum', default: Role.TEACHER, enum: Role })
   role: Role;
 
   @Column({ default: false })

@@ -12,34 +12,31 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiExcludeEndpoint,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUser, UpdateUser, LoginDto } from './dto/user.dto';
-import { User } from './entities/user.entity';
-import { UsersService } from './users.service';
+import {
+  CreateUserStudentDto,
+  UpdateUserStudentDto,
+  LoginStudentDto,
+} from './dto/userStudents.dto';
+import { UserStudents } from './entities/userStudents.entity';
+import { UsersService } from './usersStudents.service';
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../common/enums/rol.enum';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { ActiveUser } from '../../common/decorator/active-user.decorator';
 import { UserActiveInterface } from '../../common/interfaces/user-active.interface';
 
-@ApiTags('Users')
-@Controller('user')
-export class UsersController {
+@ApiTags('UsersStudents')
+@Controller('userStudent')
+export class UsersStudentsController {
   constructor(
     private readonly usersService: UsersService,
     private authService: AuthService,
   ) {}
-
-  @Post('create')
-  @ApiExcludeEndpoint()
-  create(@Body() createUser: CreateUser): Promise<User> {
-    return this.usersService.create(createUser);
-  }
 
   //Section Login
   @ApiOperation({
@@ -53,7 +50,7 @@ export class UsersController {
       'Login failed. The provided credentials are incorrect or the user does not exist.',
   })
   @Post('login')
-  async login(@Body() loginData: LoginDto) {
+  async login(@Body() loginData: LoginStudentDto) {
     const user = await this.usersService.findOneByEmail(loginData.email);
     if (!user) {
       throw new HttpException(
@@ -78,48 +75,55 @@ export class UsersController {
     };
   }
 
+  @Auth(Role.TEACHER)
+  @Post('create')
+  @ApiBearerAuth()
+  create(@Body() createUser: CreateUserStudentDto): Promise<UserStudents> {
+    return this.usersService.create(createUser);
+  }
+
   @Get('profile')
-  @Auth(Role.USER)
+  @Auth(Role.STUDENT)
   @ApiBearerAuth()
   getProfile(@ActiveUser() user: UserActiveInterface) {
     return user;
   }
 
-  @Auth(Role.USER)
+  @Auth(Role.TEACHER)
   @Get()
   @ApiBearerAuth()
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserStudents[]> {
     return this.usersService.findAll();
   }
 
-  @Auth(Role.USER)
+  @Auth(Role.TEACHER)
   @Get(':id')
   @ApiBearerAuth()
-  findOne(@Param('_id', ParseIntPipe) _id: string): Promise<User> {
+  findOne(@Param('_id', ParseIntPipe) _id: string): Promise<UserStudents> {
     return this.usersService.findOne(_id);
   }
 
-  @Auth(Role.USER)
+  @Auth(Role.TEACHER)
   @Put('edit/:_id')
   @ApiBearerAuth()
   update(
     @Param('_id') _id: string,
-    @Body() updateUser: UpdateUser,
+    @Body() updateUser: UpdateUserStudentDto,
   ): Promise<string> {
     return this.usersService.update(_id, updateUser);
   }
 
-  @Auth(Role.USER)
-  @Delete('delete/:_idUserDelete/:_id')
+  @Auth(Role.TEACHER)
+  @Delete('delete/:_id')
   @ApiBearerAuth()
-  async remove(@Param('_idUserDelete') _idUserDelete: string): Promise<string> {
+  async remove(@Param('_id') _idUserDelete: string): Promise<string> {
     return this.usersService.remove(_idUserDelete);
   }
 
-  @Auth(Role.USER)
+  @Auth(Role.TEACHER)
   @Get('email/:email')
   @ApiBearerAuth()
-  async findOneByEmail(@Param('email') email: string): Promise<User> {
+  async findOneByEmail(@Param('email') email: string): Promise<UserStudents> {
     return this.usersService.findOneByEmail(email);
   }
 }

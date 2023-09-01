@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './modules/users/users.module';
+import { APP_FILTER } from '@nestjs/core';
+import { JwtExpiredFilter } from './filters/jwt-expired.filter';
+import { JwtExceptionFilter } from './filters/jwt-exception.filter';
+import { UsersStudentsModule } from './modules/usersStudents/usersStudents.module';
+import { UsersTeachersModule } from './modules/usersTeachers/usersTeachers.module';
 
 @Module({
   imports: [
@@ -16,9 +20,19 @@ import { UsersModule } from './modules/users/users.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    UsersModule,
+    UsersStudentsModule,
+    UsersTeachersModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: JwtExpiredFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: JwtExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
