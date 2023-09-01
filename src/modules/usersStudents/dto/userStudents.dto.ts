@@ -8,7 +8,12 @@ import {
   MinLength,
 } from 'class-validator';
 import { Role } from '../../../common/enums/rol.enum';
-export class CreateUser {
+export class CreateUserStudentDto {
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @MinLength(6)
+  rut: string;
+
   @Transform(({ value }) => value.trim())
   @IsString()
   @MinLength(4)
@@ -22,7 +27,12 @@ export class CreateUser {
   @Transform(({ value }) => value.trim())
   @IsString()
   @MinLength(4)
-  lastName: string;
+  lastNameM: string;
+
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  @MinLength(4)
+  lastNameF: string;
 
   @IsEmail()
   email: string;
@@ -52,7 +62,11 @@ export class CreateUser {
   @IsOptional()
   avatar?: string;
 }
-export class UpdateUser {
+export class UpdateUserStudentDto {
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  rut?: string;
+
   @Transform(({ value }) => value.trim())
   @IsString()
   username?: string;
@@ -63,7 +77,11 @@ export class UpdateUser {
 
   @Transform(({ value }) => value.trim())
   @IsString()
-  lastName?: string;
+  lastNameM?: string;
+
+  @Transform(({ value }) => value.trim())
+  @IsString()
+  lastNameF?: string;
 
   @Transform(({ value }) => value.trim())
   @IsString()
@@ -85,14 +103,14 @@ export class UpdateUser {
   @IsString()
   avatar?: string;
 }
-export class LoginDto {
+export class LoginStudentDto {
   @ApiProperty({
-    description: 'Email of the user',
+    description: 'Email of the Student',
   })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ description: 'Password of the user' })
+  @ApiProperty({ description: 'Password of the Student' })
   @Transform(({ value }) => value.trim())
   @IsString()
   @MinLength(6)

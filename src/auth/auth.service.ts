@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import * as jwt from 'jsonwebtoken';
-import { User } from '../modules/users/entities/user.entity';
+import { UserStudents } from '../modules/usersStudents/entities/userStudents.entity';
+import { UserTeachers } from '../modules/usersTeachers/entities/userTeachers.entity';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  signIn(user: User) {
+  signIn(user: UserStudents | UserTeachers) {
     const payload = {
       id: user._id,
       email: user.email,

@@ -1,20 +1,23 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUser, UpdateUser } from './dto/user.dto';
-import { User } from './entities/user.entity';
+import {
+  CreateUserStudentDto,
+  UpdateUserStudentDto,
+} from './dto/userStudents.dto';
+import { UserStudents } from './entities/userStudents.entity';
 import { AuthService } from '../../auth/auth.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    @InjectRepository(UserStudents)
+    private readonly usersRepository: Repository<UserStudents>,
     private readonly authService: AuthService,
   ) {}
 
-  async create(createUserDto: CreateUser): Promise<User> {
+  async create(createUserDto: CreateUserStudentDto): Promise<UserStudents> {
     const userExistsByEmail = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -26,12 +29,13 @@ export class UsersService {
       );
     }
 
-    const user = new User();
+    const user = new UserStudents();
     user._id = this.authService.cryptoIdKey();
-
+    user.rut = createUserDto.rut;
     user.username = createUserDto.username;
     user.name = createUserDto.name;
-    user.lastName = createUserDto.lastName;
+    user.lastNameM = createUserDto.lastNameM;
+    user.lastNameF = createUserDto.lastNameF;
     user.email = createUserDto.email;
     user.password = await bcrypt.hash(createUserDto.password, 10);
     user.role = createUserDto.role;
@@ -43,16 +47,18 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findAllSelect(select): Promise<User[]> {
+  async findAllSelect(select): Promise<UserStudents[]> {
     return this.usersRepository.find({ select: select });
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserStudents[]> {
     return this.findAllSelect([
       '_id',
+      'rut',
       'username',
       'name',
-      'lastName',
+      'lastNameM',
+      'lastNameF',
       'email',
       'role',
       'isVerified',
@@ -60,17 +66,23 @@ export class UsersService {
     ]);
   }
 
-  async findOne(_id: string): Promise<User> {
+  async findOne(_id: string): Promise<UserStudents> {
     return this.usersRepository.findOneBy({ _id: _id });
   }
 
-  async update(_id: string, updateUser: UpdateUser): Promise<string> {
+  async update(_id: string, updateUser: UpdateUserStudentDto): Promise<string> {
     const user = await this.usersRepository.findOne({
       where: { _id: _id },
     });
+    user.rut = updateUser.rut ? updateUser.rut : user.rut;
     user.username = updateUser.username ? updateUser.username : user.username;
     user.name = updateUser.name ? updateUser.name : user.name;
-    user.lastName = updateUser.lastName ? updateUser.lastName : user.lastName;
+    user.lastNameM = updateUser.lastNameM
+      ? updateUser.lastNameM
+      : user.lastNameM;
+    user.lastNameF = updateUser.lastNameF
+      ? updateUser.lastNameF
+      : user.lastNameF;
     user.role = updateUser.role ? updateUser.role : user.role;
     user.isVerified = updateUser.isVerified
       ? updateUser.isVerified
@@ -100,7 +112,7 @@ export class UsersService {
     return 'User ' + userToDelete.username + ' removed';
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<UserStudents> {
     return this.usersRepository.findOne({
       where: { email: email },
     });
