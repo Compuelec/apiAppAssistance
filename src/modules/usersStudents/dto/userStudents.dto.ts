@@ -41,6 +41,7 @@ export class CreateUserStudentDto {
 
   @IsEmail()
   @Transform(({ value }) => value.trim())
+  @ApiProperty()
   email: string;
 
   @Transform(({ value }) => value.trim())
