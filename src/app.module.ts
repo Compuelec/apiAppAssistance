@@ -6,6 +6,7 @@ import { JwtExpiredFilter } from './filters/jwt-expired.filter';
 import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import { UsersStudentsModule } from './modules/usersStudents/usersStudents.module';
 import { UsersTeachersModule } from './modules/usersTeachers/usersTeachers.module';
+import { LoginModule } from './modules/login/login.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersTeachersModule } from './modules/usersTeachers/usersTeachers.modul
     }),
     UsersStudentsModule,
     UsersTeachersModule,
+    LoginModule,
   ],
   controllers: [],
   providers: [

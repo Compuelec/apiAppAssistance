@@ -7,23 +7,14 @@ import {
   Post,
   ParseIntPipe,
   Put,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserStudentDto,
   UpdateUserStudentDto,
-  LoginStudentDto,
 } from './dto/userStudents.dto';
 import { UserStudents } from './entities/userStudents.entity';
-import { UsersService } from './usersStudents.service';
+import { UsersServiceStudents } from './usersStudents.service';
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../common/enums/rol.enum';
 import { Auth } from '../../auth/decorators/auth.decorator';
@@ -34,46 +25,9 @@ import { UserActiveInterface } from '../../common/interfaces/user-active.interfa
 @Controller('userStudent')
 export class UsersStudentsController {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersServiceStudents,
     private authService: AuthService,
   ) {}
-
-  //Section Login
-  @ApiOperation({
-    summary: 'Login user by email and password',
-  })
-  @ApiOkResponse({
-    description: 'Login user',
-  })
-  @ApiNotFoundResponse({
-    description:
-      'Login failed. The provided credentials are incorrect or the user does not exist.',
-  })
-  @Post('login')
-  async login(@Body() loginData: LoginStudentDto) {
-    const user = await this.usersService.findOneByEmail(loginData.email);
-    if (!user) {
-      throw new HttpException(
-        'Unauthorized access. Please provide valid credentials to access this resource',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    const match = await this.usersService.compareHash(
-      loginData.password,
-      user.password,
-    );
-    if (!match) {
-      throw new HttpException(
-        'Unauthorized access. Please provide valid credentials to access this resource',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    const token = this.authService.signIn(user);
-    this.usersService.update(user._id, { token: token });
-    return {
-      token,
-    };
-  }
 
   @Auth(Role.TEACHER)
   @Post('create')
