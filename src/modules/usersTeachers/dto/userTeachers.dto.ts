@@ -137,16 +137,3 @@ export class UpdateUserTeachersDto {
   @IsString()
   avatar?: string;
 }
-export class LoginTeachersDto {
-  @ApiProperty({
-    description: 'Email of the Student',
-  })
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({ description: 'Password of the Student' })
-  @Transform(({ value }) => value.trim())
-  @IsString()
-  @MinLength(6)
-  password: string;
-}

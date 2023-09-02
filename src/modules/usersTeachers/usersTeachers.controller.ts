@@ -7,23 +7,14 @@ import {
   Post,
   ParseIntPipe,
   Put,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserTeachersDto,
   UpdateUserTeachersDto,
-  LoginTeachersDto,
 } from './dto/userTeachers.dto';
 import { UserTeachers } from './entities/userTeachers.entity';
-import { UsersService } from './usersTeachers.service';
+import { UsersServiceTeachers } from './usersTeachers.service';
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../common/enums/rol.enum';
 import { Auth } from '../../auth/decorators/auth.decorator';
@@ -32,48 +23,11 @@ import { UserActiveInterface } from '../../common/interfaces/user-active.interfa
 
 @ApiTags('UsersTeachers')
 @Controller('userTeacher')
-export class UsersController {
+export class UsersTeachersController {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersServiceTeachers,
     private authService: AuthService,
   ) {}
-
-  //Section Login
-  @ApiOperation({
-    summary: 'Login user by email and password',
-  })
-  @ApiOkResponse({
-    description: 'Login user',
-  })
-  @ApiNotFoundResponse({
-    description:
-      'Login failed. The provided credentials are incorrect or the user does not exist.',
-  })
-  @Post('login')
-  async login(@Body() loginData: LoginTeachersDto) {
-    const user = await this.usersService.findOneByEmail(loginData.email);
-    if (!user) {
-      throw new HttpException(
-        'Unauthorized access. Please provide valid credentials to access this resource',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    const match = await this.usersService.compareHash(
-      loginData.password,
-      user.password,
-    );
-    if (!match) {
-      throw new HttpException(
-        'Unauthorized access. Please provide valid credentials to access this resource',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    const token = this.authService.signIn(user);
-    this.usersService.update(user._id, { token: token });
-    return {
-      token,
-    };
-  }
 
   // @Auth(Role.TEACHER)
   @Post('create')
@@ -82,7 +36,7 @@ export class UsersController {
   }
 
   @Get('profile')
-  @Auth(Role.STUDENT)
+  @Auth(Role.TEACHER)
   @ApiBearerAuth()
   getProfile(@ActiveUser() user: UserActiveInterface) {
     return user;

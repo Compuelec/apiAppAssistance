@@ -10,7 +10,7 @@ import { AuthService } from '../../auth/auth.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
+export class UsersServiceStudents {
   constructor(
     @InjectRepository(UserStudents)
     private readonly usersRepository: Repository<UserStudents>,
