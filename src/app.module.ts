@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER } from '@nestjs/core';
@@ -7,6 +7,7 @@ import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import { UsersStudentsModule } from './modules/usersStudents/usersStudents.module';
 import { UsersTeachersModule } from './modules/usersTeachers/usersTeachers.module';
 import { LoginModule } from './modules/login/login.module';
+import * as cors from 'cors';
 
 @Module({
   imports: [
@@ -37,4 +38,8 @@ import { LoginModule } from './modules/login/login.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cors()).forRoutes('*');
+  }
+}
