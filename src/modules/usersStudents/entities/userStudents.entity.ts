@@ -3,14 +3,14 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryColumn,
   DeleteDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { Role } from '../../../common/enums/rol.enum';
 
 @Entity()
 export class UserStudents {
-  @PrimaryColumn('uuid', { length: 255, generated: 'uuid' })
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   _id: string;
 
   @Column({ unique: true, nullable: false })
