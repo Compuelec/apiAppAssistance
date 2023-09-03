@@ -21,7 +21,7 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 import { ActiveUser } from '../../common/decorator/active-user.decorator';
 import { UserActiveInterface } from '../../common/interfaces/user-active.interface';
 
-@ApiTags('UsersTeachers')
+@ApiTags('Teachers')
 @Controller('userTeacher')
 export class UsersTeachersController {
   constructor(

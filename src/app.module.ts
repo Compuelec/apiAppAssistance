@@ -21,6 +21,15 @@ import * as cors from 'cors';
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
+      ssl: process.env.DB_SSL === 'true',
+      extra: {
+        ssl:
+          process.env.DB_SSL === 'true'
+            ? {
+                rejectUnauthorized: false,
+              }
+            : null,
+      },
     }),
     UsersStudentsModule,
     UsersTeachersModule,
