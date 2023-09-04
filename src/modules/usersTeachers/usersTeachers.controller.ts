@@ -48,7 +48,6 @@ export class UsersTeachersController {
     return this.usersService.findAll();
   }
 
-  @Auth(Role.TEACHER)
   @Get(':id')
   @ApiBearerAuth()
   findOne(@Param('_id') _id: string): Promise<UserTeachers> {
@@ -72,7 +71,6 @@ export class UsersTeachersController {
     return this.usersService.remove(_idUserDelete);
   }
 
-  @Auth(Role.TEACHER)
   @Get('email/:email')
   @ApiBearerAuth()
   async findOneByEmail(@Param('email') email: string): Promise<UserTeachers> {
