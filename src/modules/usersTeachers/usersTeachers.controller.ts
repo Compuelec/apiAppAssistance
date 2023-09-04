@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  ParseIntPipe,
   Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -52,7 +51,7 @@ export class UsersTeachersController {
   @Auth(Role.TEACHER)
   @Get(':id')
   @ApiBearerAuth()
-  findOne(@Param('_id', ParseIntPipe) _id: string): Promise<UserTeachers> {
+  findOne(@Param('_id') _id: string): Promise<UserTeachers> {
     return this.usersService.findOne(_id);
   }
 
