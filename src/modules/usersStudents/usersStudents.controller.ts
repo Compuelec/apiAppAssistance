@@ -49,14 +49,13 @@ export class UsersStudentsController {
     return this.usersService.findAll();
   }
 
-  @Auth(Role.TEACHER)
   @Get(':id')
   @ApiBearerAuth()
   findOne(@Param('_id') _id: string): Promise<UserStudents> {
     return this.usersService.findOne(_id);
   }
 
-  @Auth(Role.TEACHER)
+  @Auth(Role.STUDENT)
   @Put('edit/:_id')
   @ApiBearerAuth()
   update(
@@ -73,7 +72,6 @@ export class UsersStudentsController {
     return this.usersService.remove(_idUserDelete);
   }
 
-  @Auth(Role.TEACHER)
   @Get('email/:email')
   @ApiBearerAuth()
   async findOneByEmail(@Param('email') email: string): Promise<UserStudents> {
