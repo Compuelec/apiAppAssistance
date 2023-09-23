@@ -1,23 +1,20 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  CreateUserTeachersDto,
-  UpdateUserTeachersDto,
-} from './dto/userTeachers.dto';
-import { UserTeachers } from './entities/userTeachers.entity';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 import { AuthService } from '../../auth/auth.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersServiceTeachers {
+export class UsersService {
   constructor(
-    @InjectRepository(UserTeachers)
-    private readonly usersRepository: Repository<UserTeachers>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly authService: AuthService,
   ) {}
 
-  async create(createUserDto: CreateUserTeachersDto): Promise<UserTeachers> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const userExistsByEmail = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -29,7 +26,7 @@ export class UsersServiceTeachers {
       );
     }
 
-    const user = new UserTeachers();
+    const user = new User();
     user._id = this.authService.cryptoIdKey();
     user.rut = createUserDto.rut;
     user.username = createUserDto.username;
@@ -47,11 +44,11 @@ export class UsersServiceTeachers {
     return this.usersRepository.save(user);
   }
 
-  async findAllSelect(select): Promise<UserTeachers[]> {
+  async findAllSelect(select): Promise<User[]> {
     return this.usersRepository.find({ select: select });
   }
 
-  async findAll(): Promise<UserTeachers[]> {
+  async findAll(): Promise<User[]> {
     return this.findAllSelect([
       '_id',
       'rut',
@@ -66,14 +63,11 @@ export class UsersServiceTeachers {
     ]);
   }
 
-  async findOne(_id: string): Promise<UserTeachers> {
+  async findOne(_id: string): Promise<User> {
     return this.usersRepository.findOneBy({ _id: _id });
   }
 
-  async update(
-    _id: string,
-    updateUser: UpdateUserTeachersDto,
-  ): Promise<string> {
+  async update(_id: string, updateUser: UpdateUserDto): Promise<string> {
     const user = await this.usersRepository.findOne({
       where: { _id: _id },
     });
@@ -115,7 +109,7 @@ export class UsersServiceTeachers {
     return 'User ' + userToDelete.username + ' removed';
   }
 
-  async findOneByEmail(email: string): Promise<UserTeachers> {
+  async findOneByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({
       where: { email: email },
     });

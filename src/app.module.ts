@@ -4,8 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER } from '@nestjs/core';
 import { JwtExpiredFilter } from './filters/jwt-expired.filter';
 import { JwtExceptionFilter } from './filters/jwt-exception.filter';
-import { UsersStudentsModule } from './modules/usersStudents/usersStudents.module';
-import { UsersTeachersModule } from './modules/usersTeachers/usersTeachers.module';
+import { UsersModule } from './modules/users/users.module';
 import { LoginModule } from './modules/login/login.module';
 import * as cors from 'cors';
 
@@ -31,8 +30,7 @@ import * as cors from 'cors';
             : null,
       },
     }),
-    UsersStudentsModule,
-    UsersTeachersModule,
+    UsersModule,
     LoginModule,
   ],
   controllers: [],
