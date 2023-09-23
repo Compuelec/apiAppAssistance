@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
-import { UserStudents } from '../modules/usersStudents/entities/userStudents.entity';
-import { UserTeachers } from '../modules/usersTeachers/entities/userTeachers.entity';
+import { User } from '../modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  signIn(user: UserStudents | UserTeachers) {
+  signIn(user: User) {
     const payload = {
       id: user._id,
       email: user.email,

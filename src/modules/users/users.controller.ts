@@ -8,29 +8,25 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  CreateUserTeachersDto,
-  UpdateUserTeachersDto,
-} from './dto/userTeachers.dto';
-import { UserTeachers } from './entities/userTeachers.entity';
-import { UsersServiceTeachers } from './usersTeachers.service';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../common/enums/rol.enum';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { ActiveUser } from '../../common/decorator/active-user.decorator';
 import { UserActiveInterface } from '../../common/interfaces/user-active.interface';
 
-@ApiTags('Teachers')
-@Controller('userTeacher')
+@ApiTags('Users')
+@Controller('user')
 export class UsersTeachersController {
   constructor(
-    private readonly usersService: UsersServiceTeachers,
+    private readonly usersService: UsersService,
     private authService: AuthService,
   ) {}
 
-  // @Auth(Role.TEACHER)
   @Post('create')
-  create(@Body() createUser: CreateUserTeachersDto): Promise<UserTeachers> {
+  create(@Body() createUser: CreateUserDto): Promise<User> {
     return this.usersService.create(createUser);
   }
 
@@ -44,13 +40,13 @@ export class UsersTeachersController {
   @Auth(Role.TEACHER)
   @Get()
   @ApiBearerAuth()
-  findAll(): Promise<UserTeachers[]> {
+  findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @ApiBearerAuth()
-  findOne(@Param('_id') _id: string): Promise<UserTeachers> {
+  findOne(@Param('_id') _id: string): Promise<User> {
     return this.usersService.findOne(_id);
   }
 
@@ -59,7 +55,7 @@ export class UsersTeachersController {
   @ApiBearerAuth()
   update(
     @Param('_id') _id: string,
-    @Body() updateUser: UpdateUserTeachersDto,
+    @Body() updateUser: UpdateUserDto,
   ): Promise<string> {
     return this.usersService.update(_id, updateUser);
   }
@@ -73,7 +69,7 @@ export class UsersTeachersController {
 
   @Get('email/:email')
   @ApiBearerAuth()
-  async findOneByEmail(@Param('email') email: string): Promise<UserTeachers> {
+  async findOneByEmail(@Param('email') email: string): Promise<User> {
     return this.usersService.findOneByEmail(email);
   }
 }
