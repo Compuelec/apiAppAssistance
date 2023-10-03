@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Role } from '../../../common/enums/rol.enum';
 
-export class CreateUserTeachersDto {
+export class CreateUserDto {
   @ApiProperty()
   @Transform(({ value }) => value.trim())
   @IsString()
@@ -51,7 +51,6 @@ export class CreateUserTeachersDto {
   password: string;
 
   @IsString()
-  @IsOptional()
   @ApiProperty({ required: false })
   role?: Role;
 
@@ -75,7 +74,7 @@ export class CreateUserTeachersDto {
   avatar?: string;
 }
 
-export class UpdateUserTeachersDto {
+export class UpdateUserDto {
   @ApiProperty()
   @IsOptional()
   @Transform(({ value }) => value.trim())

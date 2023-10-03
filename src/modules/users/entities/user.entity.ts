@@ -9,7 +9,7 @@ import {
 import { Role } from '../../../common/enums/rol.enum';
 
 @Entity()
-export class UserTeachers {
+export class User {
   @PrimaryColumn({ type: 'varchar', length: 50 })
   _id: string;
 
