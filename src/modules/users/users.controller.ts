@@ -44,7 +44,7 @@ export class UsersTeachersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get(':_id')
   @ApiBearerAuth()
   findOne(@Param('_id') _id: string): Promise<User> {
     return this.usersService.findOne(_id);
