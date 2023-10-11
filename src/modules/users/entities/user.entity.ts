@@ -5,7 +5,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
+import { ClassEntry } from '../../class-entry/entities/class-entry.entity';
 import { Role } from '../../../common/enums/rol.enum';
 
 @Entity()
@@ -57,4 +59,10 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => ClassEntry, (classEntry) => classEntry.student)
+  classEntry: ClassEntry[];
+
+  @OneToMany(() => ClassEntry, (classEntry) => classEntry.teacher)
+  classEntryTeacher: ClassEntry[];
 }
