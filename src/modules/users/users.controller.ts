@@ -63,8 +63,8 @@ export class UsersTeachersController {
   @Auth(Role.TEACHER)
   @Delete('delete/:_id')
   @ApiBearerAuth()
-  async remove(@Param('_id') _idUserDelete: string): Promise<string> {
-    return this.usersService.remove(_idUserDelete);
+  async remove(@Param('_id') _id: string): Promise<User> {
+    return this.usersService.remove(_id);
   }
 
   @Get('email/:email')
