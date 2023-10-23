@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER } from '@nestjs/core';
+import { NotificationsGateway } from './notifications/notifications.gateway';
 import { JwtExpiredFilter } from './filters/jwt-expired.filter';
 import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import { UsersModule } from './modules/users/users.module';
@@ -37,6 +38,7 @@ import * as cors from 'cors';
   ],
   controllers: [],
   providers: [
+    NotificationsGateway,
     {
       provide: APP_FILTER,
       useClass: JwtExpiredFilter,
