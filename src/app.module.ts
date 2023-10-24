@@ -8,6 +8,7 @@ import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import { UsersModule } from './modules/users/users.module';
 import { LoginModule } from './modules/login/login.module';
 import { ClassEntryModule } from './modules/class-entry/class-entry.module';
+import { CreateClassModule } from './modules/create-class/create-class.module';
 import * as cors from 'cors';
 
 @Module({
@@ -35,6 +36,7 @@ import * as cors from 'cors';
     UsersModule,
     LoginModule,
     ClassEntryModule,
+    CreateClassModule,
   ],
   controllers: [],
   providers: [
