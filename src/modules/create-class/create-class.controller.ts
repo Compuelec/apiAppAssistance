@@ -1,7 +1,10 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CreateClassService } from './create-class.service';
 import { CreateClassDto } from './dto/create-create-class.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Create Class')
+@ApiBearerAuth()
 @Controller('create-class')
 export class CreateClassController {
   constructor(private readonly createClassService: CreateClassService) {}

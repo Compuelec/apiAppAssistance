@@ -56,7 +56,9 @@ export class CreateClassService {
         'create_class.room',
         'teacher._id',
         'teacher.name',
-        'teacher.lastName',
+        'teacher.lastNameM',
+        'teacher.lastNameF',
+        'create_class.createdAt',
       ])
       .getMany();
     return createClass;

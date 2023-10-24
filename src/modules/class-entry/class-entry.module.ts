@@ -17,7 +17,7 @@ import { AuthModule } from 'src/auth/auth.module';
     CreateClassModule,
   ],
   controllers: [ClassEntryController],
-  providers: [ClassEntryService, UsersService, CreateClassService],
+  providers: [ClassEntryService, CreateClassService, UsersService],
   exports: [TypeOrmModule],
 })
 export class ClassEntryModule {}
