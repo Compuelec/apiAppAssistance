@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ClassEntry } from '../../class-entry/entities/class-entry.entity';
 import { Role } from '../../../common/enums/rol.enum';
+import { CreateClass } from 'src/modules/create-class/entities/create-class.entity';
 
 @Entity()
 export class User {
@@ -63,6 +64,6 @@ export class User {
   @OneToMany(() => ClassEntry, (classEntry) => classEntry.student)
   classEntry: ClassEntry[];
 
-  @OneToMany(() => ClassEntry, (classEntry) => classEntry.teacher)
-  classEntryTeacher: ClassEntry[];
+  @OneToMany(() => CreateClass, (createClass) => createClass.teacher)
+  createClass: CreateClass[];
 }
