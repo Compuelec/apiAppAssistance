@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { LoginModule } from './modules/login/login.module';
 import { ClassEntryModule } from './modules/class-entry/class-entry.module';
 import { CreateClassModule } from './modules/create-class/create-class.module';
+import { InitializationService } from './modules/users/initialization.service';
 import * as cors from 'cors';
 
 @Module({
@@ -41,6 +42,7 @@ import * as cors from 'cors';
   controllers: [],
   providers: [
     NotificationsGateway,
+    InitializationService,
     {
       provide: APP_FILTER,
       useClass: JwtExpiredFilter,
@@ -52,6 +54,12 @@ import * as cors from 'cors';
   ],
 })
 export class AppModule implements NestModule {
+  constructor(private readonly initializationService: InitializationService) {}
+
+  async onApplicationBootstrap() {
+    await this.initializationService.initializeApp();
+  }
+
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(cors()).forRoutes('*');
   }

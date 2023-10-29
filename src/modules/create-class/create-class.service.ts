@@ -38,6 +38,20 @@ export class CreateClassService {
       throw new BadRequestException('Teacher not found');
     }
 
+    const diaActual = new Date();
+    diaActual.setHours(0, 0, 0, 0);
+
+    const existingCreateClass = await this.createClassRepository
+      .createQueryBuilder('create_class')
+      .where('create_class.room = :room', { room })
+      .andWhere('create_class.course = :course', { course })
+      .andWhere('DATE(create_class.createdAt) = :diaActual', { diaActual })
+      .getOne();
+
+    if (existingCreateClass) {
+      throw new BadRequestException('The class already exists');
+    }
+
     newCreateClass.teacher = teacher;
     newCreateClass.room = room;
     newCreateClass.course = course;

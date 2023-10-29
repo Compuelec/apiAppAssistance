@@ -19,7 +19,7 @@ import { UserActiveInterface } from '../../common/interfaces/user-active.interfa
 
 @ApiTags('Users')
 @Controller('user')
-export class UsersTeachersController {
+export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private authService: AuthService,
