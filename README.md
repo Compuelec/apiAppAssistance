@@ -20,7 +20,7 @@ $ npm install
 ## Running the app
 
 ```bash
-# docker mysql database
+# docker postgres database
 $ docker-compose up -d
 
 # development
@@ -32,6 +32,7 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
 
 ## Users created by default
 
