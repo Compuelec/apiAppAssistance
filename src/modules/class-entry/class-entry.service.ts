@@ -47,7 +47,6 @@ export class ClassEntryService {
       .createQueryBuilder('class_entry')
       .where('class_entry.student = :studentId', { studentId })
       .andWhere('class_entry.class = :classId', { classId })
-      .andWhere('DATE(class_entry.createdAt) = :currentDate', { currentDate })
       .getOne();
 
     if (existingClassEntry) {
@@ -94,6 +93,41 @@ export class ClassEntryService {
       ])
       .getMany();
     return classEntry;
+  }
+
+  async findStudentClassEntries(_id: string) {
+    const createClass = await this.createClassRepository.findOneBy({
+      _id: _id,
+    });
+
+    if (!createClass) {
+      throw new BadRequestException('Class not found');
+    }
+
+    const studentClassEntries = await this.classEntryRepository
+      .createQueryBuilder('classEntry')
+      .leftJoinAndSelect('classEntry.student', 'student')
+      .leftJoinAndSelect('classEntry.class', 'class')
+      .leftJoinAndSelect('class.teacher', 'teacher')
+      .where('classEntry.class = :classId', { classId: _id })
+      .select([
+        'classEntry._id',
+        'classEntry.createdAt',
+        'student._id',
+        'student.name',
+        'student.lastNameM',
+        'student.lastNameF',
+        'class._id',
+        'class.course',
+        'class.room',
+        'teacher._id',
+        'teacher.name',
+        'teacher.lastNameM',
+        'teacher.lastNameF',
+      ])
+      .getMany();
+
+    return studentClassEntries;
   }
 
   async findOne(_id: string) {
