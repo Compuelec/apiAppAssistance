@@ -7,6 +7,7 @@ import {
 import { CreateClassEntryDto } from './dto/create-class-entry.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClassEntry } from './entities/class-entry.entity';
+import { CreateClass } from '../create-class/entities/create-class.entity';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from '../../auth/auth.service';
@@ -18,6 +19,9 @@ export class ClassEntryService {
     @InjectRepository(ClassEntry)
     private readonly classEntryRepository: Repository<ClassEntry>,
 
+    @InjectRepository(CreateClass)
+    private readonly createClassRepository: Repository<CreateClass>,
+
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private authService: AuthService,
@@ -25,7 +29,7 @@ export class ClassEntryService {
 
   @HttpCode(HttpStatus.CREATED)
   async create(createClassEntryDto: CreateClassEntryDto) {
-    const { studentId, course, room, teacherId } = createClassEntryDto;
+    const { studentId, classId } = createClassEntryDto;
 
     const newClassEntry = new ClassEntry();
     newClassEntry._id = this.authService.cryptoIdKey();
@@ -41,10 +45,8 @@ export class ClassEntryService {
     currentDate.setHours(0, 0, 0, 0);
     const existingClassEntry = await this.classEntryRepository
       .createQueryBuilder('class_entry')
-      .where('class_entry.course = :course', { course })
-      .andWhere('class_entry.student = :studentId', { studentId })
-      .andWhere('class_entry.room = :room', { room })
-      .andWhere('DATE(class_entry.createdAt) = :currentDate', { currentDate })
+      .where('class_entry.student = :studentId', { studentId })
+      .andWhere('class_entry.class = :classId', { classId })
       .getOne();
 
     if (existingClassEntry) {
@@ -53,20 +55,16 @@ export class ClassEntryService {
       );
     }
 
-    newClassEntry.student = student;
-    newClassEntry.course = course;
-    newClassEntry.room = room;
-
-    const teacher = await this.userRepository.findOneBy({
-      _id: teacherId,
-      role: Role.TEACHER,
+    const classEntry = await this.createClassRepository.findOneBy({
+      _id: classId,
     });
 
-    if (!teacher) {
-      throw new BadRequestException('Teacher not found');
+    if (!classEntry) {
+      throw new BadRequestException('Class not found');
     }
 
-    newClassEntry.teacher = teacher;
+    newClassEntry.student = student;
+    newClassEntry.class = classEntry;
 
     await this.classEntryRepository.save(newClassEntry);
     return { message: 'Class Entry created successfully' };
@@ -76,16 +74,18 @@ export class ClassEntryService {
     const classEntry = await this.classEntryRepository
       .createQueryBuilder('classEntry')
       .leftJoinAndSelect('classEntry.student', 'student')
-      .leftJoinAndSelect('classEntry.teacher', 'teacher')
+      .leftJoinAndSelect('classEntry.class', 'class')
+      .leftJoinAndSelect('class.teacher', 'teacher')
       .select([
         'classEntry._id',
-        'classEntry.course',
-        'classEntry.room',
         'classEntry.createdAt',
         'student._id',
         'student.name',
         'student.lastNameM',
         'student.lastNameF',
+        'class._id',
+        'class.course',
+        'class.room',
         'teacher._id',
         'teacher.name',
         'teacher.lastNameM',
@@ -93,6 +93,41 @@ export class ClassEntryService {
       ])
       .getMany();
     return classEntry;
+  }
+
+  async findStudentClassEntries(_id: string) {
+    const createClass = await this.createClassRepository.findOneBy({
+      _id: _id,
+    });
+
+    if (!createClass) {
+      throw new BadRequestException('Class not found');
+    }
+
+    const studentClassEntries = await this.classEntryRepository
+      .createQueryBuilder('classEntry')
+      .leftJoinAndSelect('classEntry.student', 'student')
+      .leftJoinAndSelect('classEntry.class', 'class')
+      .leftJoinAndSelect('class.teacher', 'teacher')
+      .where('classEntry.class = :classId', { classId: _id })
+      .select([
+        'classEntry._id',
+        'classEntry.createdAt',
+        'student._id',
+        'student.name',
+        'student.lastNameM',
+        'student.lastNameF',
+        'class._id',
+        'class.course',
+        'class.room',
+        'teacher._id',
+        'teacher.name',
+        'teacher.lastNameM',
+        'teacher.lastNameF',
+      ])
+      .getMany();
+
+    return studentClassEntries;
   }
 
   async findOne(_id: string) {

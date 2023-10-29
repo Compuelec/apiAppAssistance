@@ -1,6 +1,6 @@
+import { CreateClass } from 'src/modules/create-class/entities/create-class.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -17,14 +17,10 @@ export class ClassEntry {
   @ManyToOne(() => User, (user) => user._id, { eager: true })
   student: User;
 
-  @Column({ nullable: false })
-  course: string;
-
-  @Column({ nullable: false })
-  room: string;
-
-  @ManyToOne(() => User, (user) => user._id, { eager: true })
-  teacher: User;
+  @ManyToOne(() => CreateClass, (createClass) => createClass._id, {
+    eager: true,
+  })
+  class: CreateClass;
 
   @DeleteDateColumn()
   deletedAt: Date;

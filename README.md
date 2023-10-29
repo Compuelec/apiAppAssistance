@@ -4,11 +4,11 @@
 
 ## Description
 
-Proyecto API para un sistema de control de clases (Horario, asistencia, notas, etc) 
+Proyecto API para un sistema de control de clases (Horario, asistencia, notas, etc)
 
 ## Version Node
 ```bash
-$ node v19.4.0
+$ node v18.18.0
 ```
 
 ## Installation
@@ -33,16 +33,28 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+
+## Users created by default
+
+```bash
+# Admin user
+email: admin@gmail.com
+password: 123456789
+
+# Student user
+email: estudiante@gmail.com
+password: 123456789
+
+# Teacher user
+email: profesor@gmail.com
+password: 123456789
+```
+
 ## Demo de API y documentación
 
-<a href="https://nest-app-assistance-postgres.onrender.com/doc" target="_blank">LINK</a>
-
+<a href="https://apiappassistance.compuelec.cl/doc" target="_blank">LINK</a>
 
 ## Integrantes
 
 - Juan Figueroa
 - Carlos Abarca
-
-## License
-
-Nest is [MIT licensed](LICENSE).

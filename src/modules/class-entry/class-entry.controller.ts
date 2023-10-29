@@ -21,6 +21,11 @@ export class ClassEntryController {
     return this.classEntryService.findAll();
   }
 
+  @Get('class/:classId')
+  findAllByClassId(@Param('classId') classId: string) {
+    return this.classEntryService.findStudentClassEntries(classId);
+  }
+
   @Get(':_id')
   findOne(@Param('_id') _id: string) {
     return this.classEntryService.findOne(_id);
