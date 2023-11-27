@@ -30,7 +30,12 @@ export class NotificationsGateway
   @SubscribeMessage('student_enters')
   handleMessage(
     client: Socket,
-    payload: { room: string; idUser: string; classId: string },
+    payload: {
+      room: string;
+      idUser: string;
+      classId: string;
+      alumnoName: string;
+    },
   ) {
     this.server.emit('student_enters', payload);
   }
